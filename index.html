@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>어뮤징잉글리시 · 밍키</title>
+<style>
+html,body{margin:0;width:100%;height:100%;background:#102417;overflow:hidden}
+*{box-sizing:border-box}
+#app{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.screen{position:relative;width:100vw;height:100vh;max-width:1222px;max-height:1287px;overflow:hidden;background:#102417}
+.screen img{width:100%;height:100%;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none}
+.hot{position:absolute;border:0;background:transparent;border-radius:24px;cursor:pointer}
+.hot:active{background:#fff3;outline:3px solid #fff8}
+.tip{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);background:#fffdf8;color:#4b3426;padding:10px 16px;border-radius:999px;font:700 13px Arial,"Noto Sans KR",sans-serif;box-shadow:0 5px 20px #0005;z-index:20;opacity:0;pointer-events:none;transition:.2s}
+.tip.show{opacity:1}
+@media(max-aspect-ratio:1/1){.screen{width:100vw;height:auto;aspect-ratio:1222/1287}.screen img{height:auto}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="tip" class="tip">밍키의 세계를 탐험해요!</div>
+<script>
+const screens={
+ home:{img:"images/home.png", ratio:1222/1287},
+ adventure:{img:"images/adventure.png",ratio:1222/1287},
+ book:{img:"images/english-book.png",ratio:1374/1145},
+ friends:{img:"images/friends.png",ratio:1222/1287},
+ house:{img:"images/house.png",ratio:1222/1287},
+ bonus:{img:"images/bonus.png",ratio:1222/1287}
+};
+const app=document.getElementById("app"), tip=document.getElementById("tip");
+function go(name){render(name)}
+function render(name){
+ const s=screens[name]||screens.home;
+ app.innerHTML="";
+ const box=document.createElement("div"); box.className="screen";
+ const im=document.createElement("img"); im.src=s.img; im.alt="어뮤징잉글리시 밍키 화면";
+ box.appendChild(im);
+ // Transparent interaction zones are deliberately placed over the mockup.
+ const zones={
+  home:[
+   [0,84,18,15,"adventure"],[18,84,18,15,"house"],[36,84,18,15,"house"],
+   [54,84,18,15,"friends"],[72,84,28,15,"book"],[34,69,32,11,"adventure"],
+   [77,30,20,34,"bonus"]
+  ],
+  adventure:[[0,82,20,18,"home"],[20,82,20,18,"house"],[40,82,20,18,"friends"],[60,82,20,18,"book"],[80,82,20,18,"bonus"],[32,20,40,35,"adventure"]],
+  book:[[0,0,14,100,"home"],[86,0,14,100,"friends"],[32,32,36,48,"adventure"]],
+  friends:[[0,0,15,100,"home"],[85,0,15,100,"house"],[35,72,40,16,"house"]],
+  house:[[0,0,15,100,"home"],[85,0,15,100,"friends"],[25,75,50,15,"house"]],
+  bonus:[[0,0,18,30,"home"],[82,0,18,30,"home"],[18,28,28,30,"bonus"],[45,28,28,30,"bonus"],[72,28,28,30,"bonus"]]
+ };
+ (zones[name]||[]).forEach(z=>{
+   const b=document.createElement("button"); b.className="hot";
+   b.style.left=z[0]+"%"; b.style.top=z[1]+"%"; b.style.width=z[2]+"%"; b.style.height=z[3]+"%";
+   b.title="열기";
+   b.onclick=()=>go(z[4]);
+   box.appendChild(b);
+ });
+ app.appendChild(box);
+}
+render("home");
+</script>
+</body>
+</html>
